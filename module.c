@@ -84,7 +84,7 @@ static int __init soft_uart_init(void)
 
   // Initializes the port.
   tty_port_init(&port);
-  port.low_latency = 0;
+  //port.low_latency = 0;
 
   // Allocates the driver.
   soft_uart_driver = tty_alloc_driver(N_PORTS, TTY_DRIVER_REAL_RAW);
@@ -135,7 +135,7 @@ static int __init soft_uart_init(void)
   if (tty_register_driver(soft_uart_driver))
   {
     printk(KERN_ALERT "soft_uart: Failed to register the driver.\n");
-    put_tty_driver(soft_uart_driver);
+    tty_driver_kref_put(soft_uart_driver);
     return -1; // return if registration fails
   }
 
@@ -157,12 +157,7 @@ static void __exit soft_uart_exit(void)
   }
   
   // Unregisters the driver.
-  if (tty_unregister_driver(soft_uart_driver))
-  {
-    printk(KERN_ALERT "soft_uart: Failed to unregister the driver.\n");
-  }
-
-  put_tty_driver(soft_uart_driver);
+  tty_driver_kref_put(soft_uart_driver);
   printk(KERN_INFO "soft_uart: Module finalized.\n");
 }
 
