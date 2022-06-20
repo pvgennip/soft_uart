@@ -1,5 +1,5 @@
 obj-m += soft_uart.o
-
+ccflags-y := -Wno-multichar -Wno-incompatible-pointer-types
 soft_uart-objs := module.o raspberry_soft_uart.o queue.o
 
 RELEASE = $(shell uname -r)
